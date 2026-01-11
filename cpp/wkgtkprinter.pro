@@ -21,6 +21,7 @@ INCLUDEPATH += \
 SOURCES += \
         src/cli++/main.cpp \
         src/log++/ic_printerlog++.cpp \
+        src/wkgtkprinter++/encode_image.cpp \
         src/wkgtkprinter++/ichtmltopdf++.cpp \
         src/wkgtkprinter++/iclog.cpp \
         src/wkgtkprinter++/pretty_html.cpp
@@ -31,6 +32,7 @@ DISTFILES += \
 
 HEADERS += \
         src/log++/ic_printerlog++.h \
+        src/wkgtkprinter++/encode_image.h \
         src/wkgtkprinter++/ichtmltopdf++.h \
         src/wkgtkprinter++/iclog.h \
         src/wkgtkprinter++/pretty_html.h
