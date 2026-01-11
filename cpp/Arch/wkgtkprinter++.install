@@ -1,0 +1,22 @@
+pre_install() {
+  
+  echo "INSTALL WGTKPRINTER++: Setting necessary permissions for xvfb" | systemd-cat -t libicprint -p info
+
+  getent group xvfb &>/dev/null || groupadd -r xvfb
+  getent passwd xvfb &>/dev/null || useradd -r -g xvfb -s /bin/false xvfb
+
+  getent group video | grep xvfb &>/dev/null || usermod -aG video xvfb
+  getent group xvfb | grep -q "$SUDO_USER" || usermod -aG xvfb "$SUDO_USER"
+
+  echo "To automate control of the xvfb sercvice on headless systems add users to the xvfb group (${SUDO_USER} has automatically been added). Alternatively (recommended) enable the xvfb service using systemd."
+  
+}
+
+pre_upgrade() {
+  pre_install "$1"
+}
+
+
+pre_remove() {
+    systemctl stop xvfb.service
+}

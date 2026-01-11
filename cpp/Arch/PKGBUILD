@@ -1,0 +1,51 @@
+# Maintainer: Your Name <youremail@domain.com>
+pkgname=wkgtkprinter++
+pkgver=0.0.3
+pkgrel=0
+epoch=
+pkgdesc="wkgtkprinter++ cpp library and command line interface"
+arch=(x86_64)
+url=""
+license=('GPL')
+groups=()
+depends=(webkit2gtk-4.1 systemd)
+makedepends=()
+checkdepends=()
+optdepends=()
+provides=()
+conflicts=()
+replaces=()
+backup=()
+options=()
+install=wkgtkprinter++.install
+changelog=
+source=($pkgname-$pkgver.tar.gz)
+noextract=()
+sha256sums=('5b22a0674e5d69ac3705b69266bda57767b12f2abe3eed35c540f14ab50f2e0b')
+
+
+build() {
+
+# Build the library
+	make -C ./src/wkgtkprinter++
+
+# Build the command line interface
+	USER_LIBDIR="-L${srcdir}/src/wkgtkprinter++ -lwkgtkprinter++"
+	USER_INCDIR="-I${srcdir}/src"
+	make USER_LIBDIR="$USER_LIBDIR" USER_INCDIR="$USER_INCDIR" -C ./src/cli++
+
+}
+
+package() {
+
+	TEMPLATES='./templates/a4-portrait-pdf.css ./templates/a4-portrait-pdf.page'
+
+	make install -C "${srcdir}/src/cli++" DESTDIR="${pkgdir}"
+	make install -C "${srcdir}/src/wkgtkprinter++" DESTDIR="${pkgdir}"
+	install -Dm644 -t "$pkgdir/usr/lib/systemd/system" xvfb.service
+	install -Dm644 -t "$pkgdir/usr/share/polkit-1/rules.d" 50-wkgtkprinter++.rules
+	install -Dm644 -t "$pkgdir/usr/share/icprint/" $TEMPLATES
+	install -Dm644 -t "$pkgdir/usr/lib/pkgconfig" wkgtkprinter++.pc
+
+}
+
