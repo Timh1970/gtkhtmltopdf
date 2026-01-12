@@ -167,11 +167,10 @@ void html_tree::open_node(unsigned tabs) {
         }
     }
     m_nodestatus = status::OPEN;
-    if (PHTML_DEBUG)
-        jlog
-            << lvl::debug << cat::IF_WEB << iclog_FUNCTION
-            << m_htmlTag
-            << std::endl;
+    jlog
+        << lvl::debug << cat::LIB_HTML << iclog_FUNCTION
+        << m_htmlTag
+        << std::endl;
 }
 
 /**
@@ -197,7 +196,7 @@ void html_tree::close_node(unsigned tabs) {
     m_nodestatus = status::CLOSED;
     if (PHTML_DEBUG)
         jlog
-            << lvl::debug << cat::IF_WEB << iclog_FUNCTION
+            << lvl::debug << cat::LIB_HTML << iclog_FUNCTION
             << tag
             << std::endl;
 }
@@ -248,7 +247,7 @@ html_tree *pretty_html::find_first_open_sibling(html_tree *parent) {
             workNode = it;
             if (PHTML_DEBUG)
                 jlog
-                    << lvl::debug << cat::IF_WEB << iclog_FUNCTION
+                    << lvl::debug << cat::LIB_HTML << iclog_FUNCTION
                     << "found child node"
                     << std::endl;
             break;
@@ -280,7 +279,7 @@ void pretty_html::process_nodes(html_tree *primaryNode) {
             ++tabs;
             if (PHTML_DEBUG)
                 jlog
-                    << lvl::debug << cat::IF_WEB << iclog_FUNCTION
+                    << lvl::debug << cat::LIB_HTML << iclog_FUNCTION
                     << "opening unprocessed node"
                     << std::endl;
         }
@@ -292,7 +291,7 @@ void pretty_html::process_nodes(html_tree *primaryNode) {
             curNode->close_node(tabs);
             if (PHTML_DEBUG)
                 jlog
-                    << lvl::debug << cat::IF_WEB << iclog_FUNCTION
+                    << lvl::debug << cat::LIB_HTML << iclog_FUNCTION
                     << "closing leaf node"
                     << std::endl;
         }
@@ -308,7 +307,7 @@ void pretty_html::process_nodes(html_tree *primaryNode) {
             curNode = sibling;
             if (PHTML_DEBUG)
                 jlog
-                    << lvl::debug << cat::IF_WEB << iclog_FUNCTION
+                    << lvl::debug << cat::LIB_HTML << iclog_FUNCTION
                     << "setting current node to child"
                     << std::endl;
 
@@ -328,7 +327,7 @@ void pretty_html::process_nodes(html_tree *primaryNode) {
             curNode = curNode->previousBranch;
             if (PHTML_DEBUG)
                 jlog
-                    << lvl::debug << cat::IF_WEB << iclog_FUNCTION
+                    << lvl::debug << cat::LIB_HTML << iclog_FUNCTION
                     << "returninng to previous branch"
                     << std::endl;
         }

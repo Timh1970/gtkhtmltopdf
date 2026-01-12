@@ -44,7 +44,7 @@ package() {
 	make install -C "${srcdir}/src/wkgtkprinter++" DESTDIR="${pkgdir}"
 	install -Dm644 -t "$pkgdir/usr/lib/systemd/system" xvfb.service
 	install -Dm644 -t "$pkgdir/usr/share/polkit-1/rules.d" 50-wkgtkprinter++.rules
-	install -Dm644 -t "$pkgdir/usr/share/icprint/" $TEMPLATES
+	install -Dm644 -t "$pkgdir/usr/share/wkgtkprinter/" $TEMPLATES
 	install -Dm644 -t "$pkgdir/usr/lib/pkgconfig" wkgtkprinter++.pc
 
 }

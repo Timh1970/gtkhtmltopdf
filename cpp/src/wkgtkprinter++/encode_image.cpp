@@ -1,11 +1,13 @@
 #include "encode_image.h"
 
+#include "iclog.h"
+
 #include <algorithm>
 #include <fstream>
 #include <vector>
 using std::string;
 
-encode_image::encode_image(const std::string &fPath)
+encode_image::encode_image(const std::string fPath)
     : m_fullPath(fPath) {
 }
 
@@ -18,6 +20,10 @@ encode_image::encode_image(const std::string &fPath)
  * Do the encoding
  */
 string encode_image::base64_encode(unsigned char const *bytes_to_encode, size_t in_len) {
+
+    jlog << iclog::loglevel::debug << iclog::category::CORE << iclog_FUNCTION
+         << "Encoding image"
+         << std::endl;
 
     string        ret;
     int           i = 0;
@@ -80,6 +86,10 @@ string encode_image::image_type(const string file) {
     // CONVERT UPPER CASE EXTENSIONS TO LOWER CASE FOR COMPARISON PURPOSES
     std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
+    jlog << iclog::loglevel::debug << iclog::category::CORE
+         << "Seeking mime type for " << extension
+         << std::endl;
+
     struct MIME_TYPE {
             const std::string extension;
             const std::string enctype;
@@ -100,10 +110,18 @@ string encode_image::image_type(const string file) {
 
     string e;
     for (const MIME_TYPE &t : m_mimeLUT) {
-        if (t.extension.compare(extension) == 0)
+        if (t.extension.compare(extension) == 0) {
+            jlog << iclog::loglevel::debug << iclog::category::CORE << iclog_FUNCTION
+                 << "Applying mime type " << t.enctype << " to image."
+                 << std::endl;
 
             return (t.enctype);
+        }
     }
+
+    jlog << iclog::loglevel::error << iclog::category::CORE << iclog_FUNCTION
+         << "Cannot find mime type for extension " << extension
+         << std::endl;
 
     return ("");
 }
@@ -114,11 +132,19 @@ string encode_image::image_type(const string file) {
  */
 string encode_image::process_image() {
 
-    std::ifstream f(m_fullPath);
-    std::string   attachment((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
-    string        encodedImage;
-    if (f.is_open()) {
-        f.close();
+    std::ifstream file(m_fullPath);
+    if (file.fail()) {
+        jlog << iclog::loglevel::error << iclog::category::CORE << iclog_FUNCTION
+             << "Cannot read " << m_fullPath
+             << std::endl;
+
+        return ("");
+    }
+
+    std::string attachment((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    string      encodedImage;
+    if (file.is_open()) {
+        file.close();
         encodedImage = base64_encode(
             reinterpret_cast<const unsigned char *>(attachment.c_str()),
             attachment.size()
@@ -148,6 +174,14 @@ string encode_image::b64_image() {
     string imageName(m_fullPath.substr(
         m_fullPath.find_last_of("/") + 1
     ));
+
+    // Path not supplied, assumme working directory.
+    if (imageName.empty()) {
+        jlog << iclog::loglevel::debug << iclog::category::CORE << iclog_FUNCTION
+             << "No path found, using current folder." << m_fullPath
+             << std::endl;
+        imageName = m_fullPath;
+    }
 
     string encImage("\"data:" + image_type(imageName) + ";base64,");
     encImage.append(process_image());

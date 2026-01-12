@@ -6,7 +6,7 @@
 #endif
 class encode_image {
     private:
-        const std::string &m_fullPath;
+        const std::string m_fullPath;
 
         const struct b64 {
                 /* clang-format off */
@@ -28,7 +28,7 @@ class encode_image {
         std::string image_type(const std::string file);
 
     public:
-        B64ENC_API encode_image(const std::string &fPath);
+        B64ENC_API encode_image(const std::string fPath);
         B64ENC_API std::string b64_image();
 };
 

@@ -88,7 +88,7 @@ class html_tree {
             std::string &htmlPage,
             html_tree   *previousBranch = nullptr
         );
-        ~html_tree();
+        PHTML_API ~html_tree();
 
         PHTML_API html_tree *new_node(std::string htmlTag);
         bool                 is_leaf_node();

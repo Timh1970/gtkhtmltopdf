@@ -16,35 +16,35 @@
 #define ICLOG_API __attribute__((visibility("default")))
 #endif
 
-// GLOBAL DECLARATIONS FOR LOGGING
+extern unsigned ICLOG_API LOG_LEVEL;
 
-ICLOG_API extern unsigned LOG_LEVEL;
-
-typedef ulong            BITWISE;
+typedef ulong             BITWISE;
 /**
  * @brief LOG_IGNORE
  *
  * A bitwise set of events **NOT** to log
  */
-ICLOG_API extern BITWISE LOG_IGNORE;
+extern BITWISE LOG_IGNORE ICLOG_API;
 
-namespace iclog {
+namespace iclog ICLOG_API {
 
-    typedef enum {
-        SQL         = 0x01LL,
-        SQL_INS     = 0x02LL,
-        SQL_UPD     = 0x04LL,
-        SQL_SEL     = 0x08LL,
-        SQL_STAT    = 0x10LL,
-        IF_NCURSEES = 0x20LL,
-        IF_WEB      = 0x40LL,
-        DAEMON      = 0x80LL,
-        CORE        = 0x100LL,
-        UNDEF       = 0x200LL,
-        SEC_WEB     = 0x400LL,
-        SEC_NCURSES = 0x800LL,
-        LIB         = 0x1000LL,
-        CLI         = 0x2000LL
+    typedef enum : unsigned long long {
+        SQL         = 0x01ULL,
+        SQL_INS     = 0x02ULL,
+        SQL_UPD     = 0x04ULL,
+        SQL_SEL     = 0x08ULL,
+        SQL_STAT    = 0x10ULL,
+        IF_NCURSEES = 0x20ULL,
+        IF_WEB      = 0x40ULL,
+        DAEMON      = 0x80ULL,
+        CORE        = 0x100ULL,
+        UNDEF       = 0x200ULL,
+        SEC_WEB     = 0x400ULL,
+        SEC_NCURSES = 0x800ULL,
+        LIB         = 0x1000ULL,
+        CLI         = 0x2000ULL,
+        LIB_HTML    = 0x4000ULL,
+        HTML        = 0x4000ULL /**<  Large HTML strings with embedded images may be flushed by journal */
     } category;
 
     typedef enum {
@@ -59,20 +59,22 @@ namespace iclog {
     } loglevel;
 
     const std::pair<category, std::string> catLUT[]{
-        {SQL_SEL,     "(SQL SELECT) "         },
-        {SQL_UPD,     "(SQL UPDATE) "         },
-        {SQL_INS,     "(SQL INSERT) "         },
-        {SQL_STAT,    "(SQL STATEMENT) "      },
-        {SQL,         "(SQL) "                },
-        {IF_NCURSEES, "(NCURSES INTERFACE) "  },
-        {IF_WEB,      "(WEB INTERFACE) "      },
-        {DAEMON,      "(DAEMON) "             },
-        {CORE,        "(CORE) "               },
-        {UNDEF,       "(UNDEFINED) "          },
-        {SEC_WEB,     "SECURITY WEB"          },
-        {SEC_NCURSES, "SECURITY NCURSES"      },
-        {LIB,         "LIBRARY"               },
-        {CLI,         "COMMAND LINE INTERFACE"}
+        {SQL_SEL,     "(SQL SELECT) "          },
+        {SQL_UPD,     "(SQL UPDATE) "          },
+        {SQL_INS,     "(SQL INSERT) "          },
+        {SQL_STAT,    "(SQL STATEMENT) "       },
+        {SQL,         "(SQL) "                 },
+        {IF_NCURSEES, "(NCURSES INTERFACE) "   },
+        {IF_WEB,      "(WEB INTERFACE) "       },
+        {DAEMON,      "(DAEMON) "              },
+        {CORE,        "(CORE) "                },
+        {UNDEF,       "(UNDEFINED) "           },
+        {SEC_WEB,     "SECURITY WEB "          },
+        {SEC_NCURSES, "SECURITY NCURSES "      },
+        {LIB,         "LIBRARY "               },
+        {CLI,         "COMMAND LINE INTERFACE "},
+        {LIB_HTML,    "HTML LIBS "             },
+        {HTML,        "HTML "                  }
     };
 
     const std::pair<unsigned, std::string> levelLUT[]{
@@ -86,56 +88,56 @@ namespace iclog {
         {LOG_DEBUG,   "DEBUG: "      }
     };
 
-    std::string get_level(unsigned level);
-    std::string get_category(category cat);
+    std::string ICLOG_API get_level(unsigned level);
+    std::string ICLOG_API get_category(category cat);
 
     // Acknowledgement:  JP Embedded
     // https://github.com/jp-embedded/cpp-syslog/blob/master/src/syslog.h
     // Stremabuf; ostream; redirect (GPL) <http://www.gnu.org/licenses/>.
 
     //  STREAMBUF CLASS
-    class streambuf : public std::streambuf {
+    class ICLOG_API streambuf : public std::streambuf {
         private:
             std::string m_buf;
             loglevel    m_level;
             int         m_category;
 
         public:
-            streambuf();
-            void level(loglevel level);
-            void category(BITWISE cat);
+            ICLOG_API      streambuf();
+            void ICLOG_API level(loglevel level);
+            void ICLOG_API category(BITWISE cat);
 
         protected:
-            int      sync();
-            int_type overflow(int_type c);
+            int ICLOG_API      sync();
+            int_type ICLOG_API overflow(int_type c);
     };
 
     // OSTREAM CLASS
-    class ostream : public std::ostream {
+    class ICLOG_API ostream : public std::ostream {
 
         private:
             streambuf m_logbuf;
 
         public:
-            ostream();
-            void level(loglevel level);
-            void category(BITWISE cat);
+            ICLOG_API      ostream();
+            void ICLOG_API level(loglevel level);
+            void ICLOG_API category(BITWISE cat);
     };
 
     inline ostream &operator<<(ostream &os, const loglevel lev) {
-        os << iclog::get_level(lev);
+        os << get_level(lev);
         os.level(lev);
         return os;
     }
 
-    inline ostream &operator<<(ostream &os, const iclog::category cat) {
-        os << iclog::get_category(cat);
+    inline ostream &operator<<(ostream &os, const category cat) {
+        os << get_category(cat);
         os.category(cat);
         return os;
     }
 
     // REDIRECT CLASS
-    class redirect {
+    class ICLOG_API redirect {
         private:
             ostream               m_dst;
             std::ostream         &m_src;
@@ -146,8 +148,8 @@ namespace iclog {
             ~redirect();
     };
 
-} // namespace iclog
+} // namespace iclog ICLOG_API
 
-ICLOG_API extern iclog::ostream jlog;
+extern iclog::ostream jlog ICLOG_API;
 
 #endif // NC_ERRLOG_H

@@ -19,6 +19,9 @@ INCLUDEPATH += \
         /usr/include/libsoup-3.0
 
 SOURCES += \
+        Examples/demo-form/demo_jobsheet.cpp \
+        Examples/demo_jobsheet.cpp \
+        Examples/hello-page/hello_pdf.cpp \
         src/cli++/main.cpp \
         src/log++/ic_printerlog++.cpp \
         src/wkgtkprinter++/encode_image.cpp \
@@ -27,6 +30,9 @@ SOURCES += \
         src/wkgtkprinter++/pretty_html.cpp
 
 DISTFILES += \
+        Examples/demo-form/demo-form.css \
+        Examples/demo-form/demo-form.pdf \
+        Examples/demo-form/example-logo.png \
         src/cli++/icprint-cli \
         src/wkgtkprinter++/makefile
 

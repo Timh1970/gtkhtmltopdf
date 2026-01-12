@@ -9,14 +9,6 @@ using std::ofstream;
 using std::string;
 using std::stringstream;
 
-// GLOBALS FOR LEGACY LOGGING
-
-unsigned LOG_LEVEL  = LOG_NOTICE;
-BITWISE  LOG_IGNORE = 0;
-
-// New journal log
-iclog::ostream jlog;
-
 string iclog::get_level(unsigned level) {
     for (const std::pair<unsigned, string> &it : levelLUT) {
         if (level == it.first) {
@@ -117,3 +109,7 @@ iclog::redirect::redirect(std::ostream &src)
 iclog::redirect::~redirect() {
     m_src.rdbuf(m_sbuf);
 }
+
+unsigned       LOG_LEVEL  = LOG_NOTICE;
+BITWISE        LOG_IGNORE = 0;
+iclog::ostream jlog;
