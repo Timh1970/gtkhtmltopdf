@@ -335,11 +335,13 @@ void info_page(html_tree *subpage) {
         "accessible by wkgtkprinter such as \"</i>/usr/share/wkgtkprinter/</i>\"."
     );
 
+    // PAGES
     subpage->new_node("h2")->set_node_content("Pages");
     subpage->new_node("p")->set_node_content(
         "New pages are created by utilising the<b> page</b> and<b> subpage</b> classes."
     );
 
+    // THE PAGES CODE DEMO
     html_tree *divpg = subpage->new_node("div class=\"nested-code\"");
     divpg->set_node_content("&lt;div class=\"page\"&gt;");
     html_tree *divsub = divpg->new_node("div class=\"nested-code\"");
@@ -468,7 +470,8 @@ int main() {
      * to output to the journal.
      * */
     std::cout
-        << html << std::endl;
+        << "demo-form.html and demo-form.pdf have been generated"
+        << std::endl;
 
     return (0);
 }

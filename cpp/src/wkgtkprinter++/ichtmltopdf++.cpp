@@ -2,6 +2,7 @@
 #include "iclog.h"
 
 #include <X11/Xlib.h>
+#include <algorithm>
 #include <condition_variable>
 #include <fstream>
 #include <gtk/gtk.h>
@@ -555,16 +556,45 @@ void PDFprinter::set_param(std::string html, std::string printSettings, std::str
     to_cstring("file://" + outFile, out_uri);
 }
 
-/**
- * @brief PDFprinter::make_pdf
- *
- * Handle the creation of a pdf.
- *
- * Assign all the variables to a payload object and then put it in the
- * queue for webkit2gtk to handle the request.
- *
- * Await completion before exiting.
- */
+void PDFprinter::layout(std::string pageSize, std::string orientation) {
+
+    struct PaperSize sz{"A4", 210, 297};
+
+    for (const PaperSize &it : isoPaperSizes) {
+        if (it.sizeName.compare(pageSize) == 0) {
+            sz = it;
+            break;
+        }
+    }
+
+    // Make lower case
+    std::transform(orientation.begin(), orientation.end(), orientation.begin(), [](unsigned char c) { return std::tolower(c); });
+    string o = "portrait";
+    if (orientation.compare("landscape") == 0)
+        o = orientation;
+
+    std::string printSettings(
+        /* clang-format off */
+        "[Print Settings]\n"
+        "quality=high\n"
+        "resolution=300\n"
+        "output-file-format=pdf\n"
+        "printer=Print to File\n"
+        "page-set=all\n"
+        "[Page Setup]\n"
+        "PPDName=" + sz.sizeName + "\n"
+        "DisplayName=A4\n"
+        "Width=" + std::to_string(sz.shortMM) + "\n"
+        "Height=" + std::to_string(sz.longMM) + "\n"
+        "MarginTop=0\n"
+        "MarginBottom=0\n"
+        "MarginLeft=0\n"
+        "MarginRight=0\n"
+        "Orientation=" + o + "\n"
+        /* clang-format on */
+    );
+}
+
 void PDFprinter::make_pdf() {
     std::thread t([this]() {
         std::mutex              wait_mutex;

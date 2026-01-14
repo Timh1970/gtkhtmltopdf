@@ -1,25 +1,24 @@
 /******************************************************************************/
 /*                                                                            */
-/*   PDF LAYOUT CONFIGURATION                                                 */
-/*   ------------------------                                                 */
-/*  Adjust the values here to suit your requirements.                         */
+/*  PDF LAYOUT CONFIGURATION                                                  */
+/*  ------------------------                                                  */
+/*  The only setting that should be adjusted in this file is the page margin  */
 /*                                                                            */
-/*    - Sizes are in mm                                                       */
-/*    - Each different page size in a style sheet will require a              */
-/*      correctly formatted .page PDF printer configuration file              */
+/*      - Sizes are in mm                                                     */
+/*      - If you require different margins then you should make copies of     */
+/*        this style sheet, retain them in this folder, and link them as      */
+/*        needed.                                                             */
 /*                                                                            */
 /******************************************************************************/
-:root {
-  /* Configuration - modify these values as needed */
-    --page-margin: 6;
-    --page-width: 210;
-    --page-height: 297;
+@page {
+    size: ANSID;
+    margin: 0;
 }
 
-/* Must match --page width, --page-height and --page-margin */
-@page {
-    size: A4;
-    margin: 0;
+:root {
+    --page-width: 864;
+    --page-height: 559;
+    --page-margin: 8;
 }
 
 /* End of layout configuration */
@@ -63,7 +62,7 @@ body {
     border: .5mm red solid;
     /* Height needs to be slightly shorter to prevent creation of a blank page */
     height: calc(((var(--page-height) - (var(--page-margin) * 2)) *.999) * 1mm);
-    width: calc((var(--page-width) - calc(var(--page-margin) * 2)) * 1mm);
+    width: calc((var(--page-width) - (var(--page-margin) * 2)) * 1mm);
 }
 
 @media print {
@@ -80,3 +79,4 @@ body {
     }
 }
 /* End of required section */
+

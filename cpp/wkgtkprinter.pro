@@ -22,6 +22,7 @@ SOURCES += \
         Examples/demo-form/demo_jobsheet.cpp \
         Examples/demo_jobsheet.cpp \
         Examples/hello-page/hello_pdf.cpp \
+        misc/template_maker/template_maker.cpp \
         src/cli++/main.cpp \
         src/log++/ic_printerlog++.cpp \
         src/wkgtkprinter++/encode_image.cpp \

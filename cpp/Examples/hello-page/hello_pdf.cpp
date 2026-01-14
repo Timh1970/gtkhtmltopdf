@@ -21,7 +21,7 @@ int main() {
      * Set up the gtk environment to enable printing.
      *
      * This class is a singleton; it only needs to be called once;
-     * it will stay resident for the duration of the applicaiton
+     * it will stay resident for the duration of the application
      * and automatically clean itself up at the end.
      *
      * It is safe, albeit pointless, to call it multiple times as
@@ -74,17 +74,17 @@ int main() {
      * Create a page.
      *
      * @note that the first declaration is for the page itself and the
-     * second is the area inside the page margin.
-     *
+     * second is the area inside the page margin. We create a separate
+     * reference to the innermost element for adding content.
      */
-    html_tree *page = body->new_node("div class=\"page\"");
-    page            = page->new_node("div class=\"subpage\"");
+    html_tree *page    = body->new_node("div class=\"page\"");
+    html_tree *subpage = page->new_node("div class=\"subpage\"");
 
     /**
      * Put something on the page.
      */
-    page->new_node("h1")->set_node_content("Hello World");
-    page->new_node("p")->set_node_content(
+    subpage->new_node("h1")->set_node_content("Hello World");
+    subpage->new_node("p")->set_node_content(
         "Testing PDF generation; for a more complete example see <i>demo-form</i> in the examples folder."
     );
 
@@ -113,8 +113,8 @@ int main() {
     PDFprinter pdf;
 
     /**
-     * The basic parameters requried to generate a pdf are the
-     * html itself, a page conriguration string, and a filename
+     * The basic parameters required to generate a pdf are the
+     * html itself, a page configuration string, and a filename
      * for the output.
      */
     pdf.set_param(

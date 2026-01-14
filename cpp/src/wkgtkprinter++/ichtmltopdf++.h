@@ -5,6 +5,7 @@
 #include <string>
 #include <systemd/sd-bus.h>
 #include <thread>
+#include <vector>
 #include <webkit2/webkit2.h>
 
 #ifndef PDF_API
@@ -95,6 +96,62 @@ class icGTK {
  *
  */
 class PDF_API PDFprinter {
+    public:
+        struct PaperSize {
+                std::string sizeName;
+                uint        shortMM;
+                uint        longMM;
+        };
+
+        const std::vector<PaperSize> isoPaperSizes = {
+            {"A0",      841,  1189},
+            {"A1",      594,  841 },
+            {"A2",      420,  594 },
+            {"A3",      297,  420 },
+            {"A4",      210,  297 },
+            {"A5",      148,  210 },
+            {"A6",      105,  148 },
+            {"A7",      74,   105 },
+            {"A8",      52,   74  },
+            {"A9",      37,   52  },
+            {"A10",     26,   37  },
+            {"B0",      1000, 1414},
+            {"B1",      707,  1000},
+            {"B2",      500,  707 },
+            {"B3",      353,  500 },
+            {"B4",      250,  353 },
+            {"B5",      176,  250 },
+            {"B6",      125,  176 },
+            {"B7",      88,   125 },
+            {"B8",      62,   88  },
+            {"B9",      44,   62  },
+            {"B10",     31,   44  },
+            {"C0",      917,  1297},
+            {"C1",      648,  917 },
+            {"C2",      458,  648 },
+            {"C3",      324,  458 },
+            {"C4",      229,  324 },
+            {"C5",      162,  229 },
+            {"C6",      114,  162 },
+            {"C7",      81,   114 },
+            {"C8",      57,   81  },
+            {"C9",      40,   57  },
+            {"C10",     28,   40  },
+            {"ANSIA",   216,  279 },
+            {"ANSIB",   279,  432 },
+            {"ANSIC",   432,  559 },
+            {"ANSID",   559,  864 },
+            {"ANSIE",   864,  1118},
+            {"Letter",  216,  279 },
+            {"Legal",   216,  356 },
+            {"Tabloid", 279,  432 },
+            {"ArchA",   229,  305 },
+            {"ArchB",   305,  457 },
+            {"ArchC",   457,  610 },
+            {"ArchD",   610,  914 },
+            {"ArchE",   914,  1219}
+        };
+
     private:
         char *in_uri;
         char *html_txt;
@@ -114,7 +171,18 @@ class PDF_API PDFprinter {
         PDFprinter();
         ~PDFprinter();
         void set_param(std::string html, std::string printSettings, std::string outFile);
+        /**
+         * @brief PDFprinter::make_pdf
+         *
+         * Handle the creation of a pdf.
+         *
+         * Assign all the variables to a payload object and then put it in the
+         * queue for webkit2gtk to handle the request.
+         *
+         * Await completion before exiting.
+         */
         void make_pdf();
+        void layout(std::string pageSize, std::string oreintation);
 
         static std::string read_file(const std::string &fullPath);
 };
